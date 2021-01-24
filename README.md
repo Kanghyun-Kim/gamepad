@@ -1,5 +1,5 @@
 # Gamepad Driver Class 
-For Jetracer, Jetson Teleoperation with Shanwan Gamepad.
+Gamepad Driver with Shanwan Gamepad, for Teleoperation of Jetracer(Racing car powered by Jetson nano),.
 
 # Usage
 
