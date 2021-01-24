@@ -9,9 +9,10 @@
 
 import os, struct, array
 from fcntl import ioctl
+from threading import Thread
 import traitlets
 
-class Gamepad_teleop(traitlets.HasTraits):
+class Gamepad_teleop(Thread, traitlets.HasTraits):
     maps = {'axis':['x', 'y', 'z', 'rz', 'hat0x', 'hat0y'],
             'button':['btn_y', 'btn_b', 'btn_a', 'btn_x', 'btn_xx', 'btn_xxx', 'tl', 'tr', 'tl2', 'tr2', 'select', 'start', 'mode']}
     x = traitlets.Float(default_value=0) #0x00 left=-1, right=1
@@ -27,8 +28,14 @@ class Gamepad_teleop(traitlets.HasTraits):
     js = None # joystick io.bufferedreader
     
     def __init__(self):
+        super().__init__()
         self.connect()
         self.update_maps()
+        self.daemon = True
+        
+    def loop_start(self):
+        print("--start--")
+        self.start()
     
     def connect(self, js='/dev/input/js0'):
         print('Open %s...' % js)
@@ -165,6 +172,7 @@ class Gamepad_teleop(traitlets.HasTraits):
         
         self.maps['axis'] = axis_map
         self.maps['button'] = button_map
+        print("Keymap Update Completed")
             
     @traitlets.observe('y')
     def monitor_throttle(self, change):
